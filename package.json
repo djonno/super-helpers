@@ -1,0 +1,22 @@
+{
+  "name": "super-helpers",
+  "version": "1.0.0",
+  "description": "Several helper functions may help you to live your life in our lovely earth",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djonno/super-helpers.git"
+  },
+  "author": "djonno",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/djonno/super-helpers/issues"
+  },
+  "homepage": "https://github.com/djonno/super-helpers#readme",
+  "dependencies": {
+    "csv-parser": "^3.0.0"
+  }
+}
