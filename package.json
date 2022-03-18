@@ -1,6 +1,6 @@
 {
   "name": "superb-helpers",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Several helper functions may help you to live your life in our lovely earth",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/djonno/super-helpers#readme",
   "dependencies": {
-    "csv-parser": "^3.0.0"
+    "csv-parser": "^3.0.0",
+    "os": "^0.1.2"
   }
 }
