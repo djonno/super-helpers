@@ -1,4 +1,8 @@
+const fs = require('fs');
+const os = require("os");
 const { CsvToIndex } = require("../index");
+
+const fileTester = "./tests/sample.csv";
 
 async function foo() {
     const indexCallback = (data) => {
@@ -13,10 +17,13 @@ async function foo() {
     const dataCallback = (data) => {
         return data;
     }
-    return CsvToIndex.build("./tests/sample.csv", indexCallback, dataCallback);
+    return CsvToIndex.build(fileTester, null, indexCallback, dataCallback);
 }
 
 (async () => {
     var obj = await foo();
-    console.log(obj.getByIndex("2017-01-05"))
+    console.log(obj.getByIndex("2017-01-05"));
+    fs.appendFileSync(fileTester, '2017-01-15 07:00:00,0.999999' + os.EOL);
+    await obj.updateIndex();
+    console.log(obj.getByIndex("2017-01-15"));
 })();
