@@ -1,8 +1,6 @@
 const { CsvToIndex } = require("../index");
 
-
-
-(async () => {
+async function foo() {
     const indexCallback = (data) => {
         let index = data["TimeStamp"];
         if (!index) {
@@ -15,8 +13,10 @@ const { CsvToIndex } = require("../index");
     const dataCallback = (data) => {
         return data;
     }
-    var x = new CsvToIndex("./tests/sample.csv", indexCallback, dataCallback);
+    return CsvToIndex.build("./tests/sample.csv", indexCallback, dataCallback);
+}
 
-    await x.buildIndex();
-    console.log(x.getByIndex("2017-01-05"));
+(async () => {
+    var obj = await foo();
+    console.log(obj.getByIndex("2017-01-05"))
 })();

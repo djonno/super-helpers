@@ -3,49 +3,52 @@ const csv = require('csv-parser');
 
 const errUndefinedDateCol = new Error("Undefined date column");
 
+function reader(readStream, onDataCallback, result) {
+    return new Promise((resolve, reject) => {
+        readStream.pipe(csv())
+            .on('data', (data) => {
+                onDataCallback(data);
+            })
+            .on('end', () => {
+                resolve(result);
+            })
+            .on('close', (err) => {
+                reject(err);
+            });
+    });
+}
+
 class CsvToIndex {
-    constructor(csvPath, indexerCallback, dataCallback) {
-        this.csvPath = csvPath;
-        this.indexerCallback = indexerCallback;
-        this.dataCallback = dataCallback;
-        this.index = {};
-        this.lastIndex = -1;
-        this.values = [];
+    constructor(result) {
+        if (typeof result === 'undefined') {
+            throw new Error('Cannot be called directly');
+        }
+
+        this.index = result.index;
+        this.lastIndex = result.lastIndex;
+        this.values = result.values;
     }
 
-    async reader(readStream, onDataCallback) {
-        return new Promise((resolve, reject) => {
-            console.log('Start streaming file ' + this.csvPath);
-            readStream.pipe(csv())
-                .on('data', (data) => {
-                    onDataCallback(data);
-                })
-                .on('end', () => {
-                    console.log('Stream file ' + this.csvPath + ' has been finished');
-                    resolve(null);
-                })
-                .on('close', (err) => {
-                    console.log('Stream file ' + this.csvPath + ' has been destroyed and the file has been closed. Error : ' + err);
-                    reject(err);
-                });
-        });
-    }
-
-    async buildIndex() {
-        console.log("Build index " + this.csvPath);
-        var csvStream = fs.createReadStream(this.csvPath);
+    static async build(csvPath, indexerCallback, dataCallback) {
+        var csvStream = fs.createReadStream(csvPath);
+        var result = {
+            lastIndex: -1,
+            index: {},
+            values: [],
+        }
         const onDataCallback = (data) => {
-            const index = this.indexerCallback(data)
+            const index = indexerCallback(data)
             if (!index) {
-                readStream.destroy(errUndefinedDateCol);
+                csvStream.destroy(errUndefinedDateCol);
             }
 
-            this.lastIndex++;
-            this.index[index] = this.lastIndex;
-            this.values.push(this.dataCallback(data));
+            result.lastIndex++;
+            result.index[index] = result.lastIndex;
+            result.values.push(dataCallback(data));
         };
 
-        await this.reader(csvStream, onDataCallback);
+        var async_result = await reader(csvStream, onDataCallback, result);
+        return new CsvToIndex(async_result);
     }
 
     getByIndex(index) {
@@ -55,12 +58,6 @@ class CsvToIndex {
         }
 
         return this.values[id];
-    }
-
-    destroy() {
-        this.lastIndex = -1;
-        this.index = {};
-        this.values = [];
     }
 }
 
