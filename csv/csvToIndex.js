@@ -1,7 +1,7 @@
 const fs = require('fs');
 const csv = require('csv-parser');
 
-const errUndefinedDateCol = new Error("Undefined date column");
+const errUndefinedIndexCol = new Error("Undefined index column");
 
 function reader(readStream, csvOptions, onDataCallback, result) {
     return new Promise((resolve, reject) => {
@@ -45,7 +45,7 @@ class CsvToIndex {
         const onDataCallback = (data) => {
             const index = indexerCallback(data)
             if (!index) {
-                csvStream.destroy(errUndefinedDateCol);
+                csvStream.destroy(errUndefinedIndexCol);
             }
 
             result.lastIndex++;
@@ -74,7 +74,7 @@ class CsvToIndex {
         const onDataCallback = (data) => {
             const index = this.indexerCallback(data)
             if (!index) {
-                csvStream.destroy(errUndefinedDateCol);
+                csvStream.destroy(errUndefinedIndexCol);
             }
 
             if (!(index in this.index)) {
