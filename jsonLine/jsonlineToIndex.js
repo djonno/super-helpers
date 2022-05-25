@@ -13,7 +13,7 @@ class JsonLineToIndex {
         while (line = liner.next()) {
             const lineData = JSON.parse(line);
             const idx = indexerCallback(lineData)
-            if (!idx) {
+            if (typeof idx == 'undefined') {
                 errCallback(errUndefinedIndexCol);
                 liner.close()
                 return;
@@ -37,7 +37,7 @@ class JsonLineToIndex {
 
     getByIndex(index) {
         const id = this.index[index];
-        if (!id) {
+        if (typeof id == 'undefined') {
             return;
         }
 

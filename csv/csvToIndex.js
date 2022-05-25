@@ -44,7 +44,7 @@ class CsvToIndex {
         }
         const onDataCallback = (data) => {
             const index = indexerCallback(data)
-            if (!index) {
+            if (typeof index == 'undefined') {
                 csvStream.destroy(errUndefinedIndexCol);
             }
 
@@ -59,7 +59,7 @@ class CsvToIndex {
 
     getByIndex(index) {
         const id = this.index[index];
-        if (!id) {
+        if (typeof id == 'undefined') {
             return;
         }
 
@@ -73,7 +73,7 @@ class CsvToIndex {
         var csvStream = fs.createReadStream(this.csvPath);
         const onDataCallback = (data) => {
             const index = this.indexerCallback(data)
-            if (!index) {
+            if (typeof index == 'undefined') {
                 csvStream.destroy(errUndefinedIndexCol);
             }
 
